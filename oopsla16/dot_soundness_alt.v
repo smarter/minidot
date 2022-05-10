@@ -895,10 +895,29 @@ Proof.
     eauto.
     rewrite subst_open_commute1.
     eauto.
-    eapply closed_subst. rewrite map_length. rewrite app_length in *. simpl in *.
+
+    rewrite map_length.
+    eapply closed_subst. eapply closed_upgrade_gh. eassumption.
+    rewrite app_length. simpl. omega.
+    econstructor.  eapply has_type_closed1. eauto.
+
+    rewrite map_length.
+    eapply closed_subst. eapply closed_upgrade_gh. eassumption.
+    rewrite app_length. simpl. omega.
+    econstructor.  eapply has_type_closed1. eauto.
+
+    case_eq (beq_nat x2 0); intros E.
+    eapply beq_nat_true in E. subst.
+    eapply T_AndAppVar. eapply IH1. eapply IH2.
+
+    rewrite subst_open_commute1.
+    
+
+    
+    eapply closed_subst rewrite map_length. rewrite app_length in *. simpl in *.
     eapply closed_upgrade_gh. eassumption. omega.
     rewrite map_length. rewrite app_length in *. simpl in *.
-    econstructor. 
+    econstructor
     
     
     
