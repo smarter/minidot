@@ -715,6 +715,14 @@ Proof.
     destruct IHhas_type. eauto. eauto. ev.
     assert (exists m0, vtpdd m0 G1 x T2). eexists. eapply vtp_widen; eauto.
     ev. euv. repeat eexists. eauto.
+  - Case "andi".
+    destruct IHhas_type1. eauto. eauto. ev.
+    assert (exists m0, vtpdd m0 G1 x T1). eexists. eauto.
+    destruct IHhas_type2. eauto. eauto. ev.
+    assert (exists m0, vtpdd m0 G1 x T2). eexists. eauto.
+    repeat eexists.
+    eapply vtp_and. eapply H1. eapply H5.
+    assert (x1 <= x1 + x3). omega. eauto. omega.
 Qed.
 
 Lemma stp_subst_narrow: forall GH0 TX G1 T1 T2 x m n1 n2,
@@ -863,6 +871,21 @@ Proof.
     edestruct stp_subst_narrow_z. eapply H3. eapply HV.
     edestruct IHniT as [? IH]. eapply H2. omega. eauto.
     eexists. eapply T_Sub. eauto. eauto.
+  - Case "andi". subst. simpl.
+    edestruct IHniT as [? IH1]. eapply H2. omega. eauto.
+    edestruct IHniT as [? IH2]. eapply H3. omega. eauto.
+    destruct b.
+    eexists. eapply T_AndI. eauto. eauto. eexists.
+
+    case_eq (beq_nat x0 0); intros E.
+
+    eapply beq_nat_true in E. subst.
+    eapply T_AndI. eauto. eauto.
+
+    simpl in *. rewrite E in *.
+
+    edestruct hastp_inv as [? [? HV]]. eapply T_AndI. eauto. eauto.
+    eapply T_AndI. eauto. eauto.
   - Case "dnil". subst. simpl.
     eexists. eapply D_Nil.
   - Case "typ". subst. simpl.
@@ -1069,4 +1092,9 @@ Proof.
     + SCase "step".
       ev. subst.
       right. repeat eexists. eauto. eapply T_Sub. eauto. eapply stp_extend_mult. eauto.
+  - Case "andi". subst.
+    eapply has_type_closed_b in H.
+    destruct H.
+    subst.
+    left. eexists. split. reflexivity. eapply index_exists. assumption.
 Qed.

@@ -68,8 +68,8 @@ COQCHK?="$(COQBIN)coqchk"
 VFILES:=SfLib.v\
   dot.v\
   dot_soundness_alt.v\
-  dot_soundness.v\
   dot_exs.v
+  # dot_soundness.v
 
 -include $(addsuffix .d,$(VFILES))
 .SECONDARY: $(addsuffix .d,$(VFILES))
