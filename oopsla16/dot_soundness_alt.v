@@ -901,8 +901,28 @@ Proof.
     eapply closed_upgrade_gh. eassumption. omega.
     rewrite map_length. econstructor. eapply has_type_closed1. eauto.
 
+    (* eexists *)
+    (* econstructor. *)
+    (* easusmption. *)
+
+    eexists.
     case_eq (beq_nat x2 0); intros E.
     eapply beq_nat_true in E. subst.
+    eapply T_AndAppVar.
+    eapply IH1.
+    rewrite subst_open_commute1.
+    rewrite subst_open_commute1.
+    
+    eexists.
+    eapply IH1.
+    rewrite subst_open_commute
+    rewrite <- subst_open.
+    eexists. eapply T_AndAppVar.
+
+    eapply IH1.
+    rewrite subst_open_commute1.
+    econstructor
+    
     rewrite subst_open_commute0b.
     eexists. eapply T_AndAppVar.
     eapply IH1.
