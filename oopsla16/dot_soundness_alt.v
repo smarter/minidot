@@ -887,10 +887,27 @@ Proof.
     edestruct hastp_inv as [? [? HV]]. eapply T_AndI. eauto. eauto.
     eapply T_AndI. eauto. eauto.
   - Case "andappvar". subst. simpl.
+    edestruct hastp_inv as [? [? HV]]. eauto.
+    eexists. econstructor.
+    edestruct IHniT as [? IH1]. eapply H2. omega. eauto.
+    Focus 2.
+    destruct b2. 
+    (* edestruct IHniT as [? IH2]. eapply H2. omega. eauto. *)
+    
+    econstructor.
+    Focus 2. 
+    
+    edestruct stp_subst_narrow_z eapply H2.
     edestruct IHniT as [? IH1]. eapply H2. omega. eauto.
     destruct b2.
 
-    eexists. eapply T_AndAppVar. eapply IH1.
+    eexists. eapply T_AndAppVar.
+    
+    case_eq (beq_nat x2 0); intros E.
+    eapply beq_nat_true in E. subst.
+    
+    
+    eapply IH1
     rewrite subst_open_commute1. eauto.
     rewrite subst_open_commute1. eauto.
     eapply closed_subst. rewrite map_length. rewrite app_length in *. simpl in *.
