@@ -268,7 +268,7 @@ Inductive has_type : tenv -> venv -> tm -> ty -> nat -> Prop :=
       T3' = (open 0 (TVar b2 x2) T3) ->
       closed (length GH) (length G1) 0 T2' ->
       closed (length GH) (length G1) 0 T3' ->
-      has_type GH G1 (tapp t l (tvar b2 x2)) T2' (S n1)
+      has_type GH G1 (tapp t l (tvar b2 x2)) (TAnd T2' T3') (S n1)
 
 (* : -- member initialization *)
 with dms_has_type: tenv -> venv -> dms -> ty -> nat -> Prop :=
@@ -757,7 +757,7 @@ Proof.
   - eapply IHT in H1. inversion H1. eauto. omega.
   - eapply IHS2. eauto. omega.
   - econstructor. eapply IHT. eapply H1. omega. eapply IHT. eapply H2. omega.
-  - eapply IHT in H1. inversion H1. eauto. omega.
+  - econstructor. eauto. eauto.
   (* dms_has_type *)
   - econstructor.
   - subst. econstructor. econstructor. eauto. eauto. eapply IHD. eauto. omega.

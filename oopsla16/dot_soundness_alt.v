@@ -886,6 +886,47 @@ Proof.
 
     edestruct hastp_inv as [? [? HV]]. eapply T_AndI. eauto. eauto.
     eapply T_AndI. eauto. eauto.
+  - Case "andappvar". subst. simpl.
+    edestruct IHniT as [? IH1]. eapply H2. omega. eauto.
+    destruct b2.
+
+    eexists. eapply T_AndAppVar. eapply IH1.
+    rewrite subst_open_commute1. eauto.
+    rewrite subst_open_commute1. eauto.
+    eapply closed_subst. rewrite map_length. rewrite app_length in *. simpl in *.
+    eapply closed_upgrade_gh. eassumption. omega.
+    rewrite map_length. econstructor. eapply has_type_closed1. eauto.
+
+    eapply closed_subst. rewrite map_length. rewrite app_length in *. simpl in *.
+    eapply closed_upgrade_gh. eassumption. omega.
+    rewrite map_length. econstructor. eapply has_type_closed1. eauto.
+
+    case_eq (beq_nat x2 0); intros E.
+    eapply beq_nat_true in E. subst.
+    rewrite subst_open_commute0b.
+    eexists. eapply T_AndAppVar.
+    eapply IH1.
+    rewrite subst_open_commute1.
+    rewrite <- subst_open5.
+        
+
+
+    
+    rewrite map_length. rewrite <- subst_open_commute0b.
+    eapply closed_subst. eapply closed_upgrade_gh. eassumption.
+    rewrite app_length. simpl. omega.
+    econstructor. eapply has_type_closed1. eauto.
+
+    rewrite subst_open5.
+    simpl in *. rewrite E in *.
+    eexists. eapply T_AppVar. eauto. eauto. eauto.
+    rewrite <- subst_open5. eapply closed_subst.
+    subst. rewrite map_length. rewrite app_length in *. simpl in *. eassumption.
+    subst. rewrite map_length. econstructor. eapply has_type_closed1. eauto.
+    apply []. apply beq_nat_false. apply E. apply []. apply beq_nat_false. apply E.
+
+   
+    
   - Case "dnil". subst. simpl.
     eexists. eapply D_Nil.
   - Case "typ". subst. simpl.
