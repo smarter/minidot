@@ -889,115 +889,111 @@ Proof.
   - Case "andappvar". subst. simpl.
     edestruct IHniT as [? IH1]. eapply H2. omega. eauto.
     edestruct IHniT as [? IH2]. eapply H3. omega. eauto.
-    eexists. destruct b1. destruct b2.
-    eapply T_AndAppVar. eapply IH1. eapply IH2.
-    rewrite subst_open_commute1.
-    eauto.
-    rewrite subst_open_commute1.
-    eauto.
-
-    rewrite map_length.
-    eapply closed_subst. eapply closed_upgrade_gh. eassumption.
-    rewrite app_length. simpl. omega.
-    econstructor.  eapply has_type_closed1. eauto.
-
-    rewrite map_length.
-    eapply closed_subst. eapply closed_upgrade_gh. eassumption.
-    rewrite app_length. simpl. omega.
-    econstructor.  eapply has_type_closed1. eauto.
-
-    case_eq (beq_nat x2 0); intros E.
-    eapply beq_nat_true in E. subst.
-    eapply T_AndAppVar. eapply IH1. eapply IH2.
-
-    rewrite subst_open_commute1.
-    
-
-    
-    eapply closed_subst rewrite map_length. rewrite app_length in *. simpl in *.
-    eapply closed_upgrade_gh. eassumption. omega.
-    rewrite map_length. rewrite app_length in *. simpl in *.
-    econstructor
-    
-    
-    
-    edestruct hastp_inv as [? [? HV]]. eauto.
-    eexists. econstructor.
-    edestruct IHniT as [? IH1]. eapply H2. omega. eauto.
-    Focus 2.
-    destruct b2. 
-    (* edestruct IHniT as [? IH2]. eapply H2. omega. eauto. *)
-    
-    econstructor.
-    Focus 2. 
-    
-    edestruct stp_subst_narrow_z eapply H2.
-    edestruct IHniT as [? IH1]. eapply H2. omega. eauto.
-    destruct b2.
-
-    eexists. eapply T_AndAppVar.
-    
-    case_eq (beq_nat x2 0); intros E.
-    eapply beq_nat_true in E. subst.
-    
-    
-    eapply IH1
-    rewrite subst_open_commute1. eauto.
-    rewrite subst_open_commute1. eauto.
-    eapply closed_subst. rewrite map_length. rewrite app_length in *. simpl in *.
-    eapply closed_upgrade_gh. eassumption. omega.
-    rewrite map_length. econstructor. eapply has_type_closed1. eauto.
-
-    eapply closed_subst. rewrite map_length. rewrite app_length in *. simpl in *.
-    eapply closed_upgrade_gh. eassumption. omega.
-    rewrite map_length. econstructor. eapply has_type_closed1. eauto.
-
-    (* eexists *)
-    (* econstructor. *)
-    (* easusmption. *)
-
+    edestruct IHniT as [? IH3]. eapply H4. omega. eauto.
+    replace (substt x (TAnd (open 0 (TVar b2 x2) T2) (open 0 (TVar b2 x2) T3))) with (TAnd (substt x (open 0 (TVar b2 x2) T2)) (substt x (open 0 (TVar b2 x2) T3))) by eauto.
     eexists.
-    case_eq (beq_nat x2 0); intros E.
-    eapply beq_nat_true in E. subst.
+    destruct b1, b2.
+
     eapply T_AndAppVar.
     eapply IH1.
-    rewrite subst_open_commute1.
-    rewrite subst_open_commute1.
     
-    eexists.
-    eapply IH1.
-    rewrite subst_open_commute
-    rewrite <- subst_open.
-    eexists. eapply T_AndAppVar.
+    eauto. eauto. fold subst. simpl in *.
+    eauto. fold subst. simpl in *.
+    rewrite subst_open_commute1. eauto.
+    rewrite subst_open_commute1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
 
-    eapply IH1.
+    simpl in *.
+    destruct x2. simpl in *.
+    (* destruct (beq_nat x2 0). *)
+    (* rewrite subst_open. *)
+    (* unfold substt. *)
+    eapply T_AndAppVar.
+    eapply IH1. eauto. eauto. fold subst.
+    rewrite subst_open_commute0b. eauto.
+
+    fold subst. rewrite subst_open_commute0b. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+
+    simpl in *.
+    eapply T_AndAppVar.
+    eauto. eauto. eauto. fold subst.
+    rewrite subst_open5; eauto.
+    fold subst.
+    rewrite subst_open5; eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+
+
+    simpl in *.
+    destruct x1; simpl in *.
+    eapply T_AndAppVar.
+    eauto. eauto. eauto. fold subst.
+    unfold substt.
     rewrite subst_open_commute1.
-    econstructor
-    
-    rewrite subst_open_commute0b.
-    eexists. eapply T_AndAppVar.
-    eapply IH1.
-    rewrite subst_open_commute1.
-    rewrite <- subst_open5.
-        
+    eauto. fold subst.
+    rewrite subst_open_commute1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
 
+    eapply T_AndAppVar.
+    eauto. eauto. eauto. fold subst.
+    rewrite subst_open_commute1. eauto.
+    fold subst. rewrite subst_open_commute1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
 
-    
-    rewrite map_length. rewrite <- subst_open_commute0b.
-    eapply closed_subst. eapply closed_upgrade_gh. eassumption.
-    rewrite app_length. simpl. omega.
-    econstructor. eapply has_type_closed1. eauto.
+    simpl in *.
+    destruct x1, x2; simpl in *.
+    eapply T_AndAppVar.
+    eauto. eauto. eauto. fold subst.
+    rewrite subst_open_commute0b. eauto.
+    fold subst. rewrite subst_open_commute0b. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
 
-    rewrite subst_open5.
-    simpl in *. rewrite E in *.
-    eexists. eapply T_AppVar. eauto. eauto. eauto.
-    rewrite <- subst_open5. eapply closed_subst.
-    subst. rewrite map_length. rewrite app_length in *. simpl in *. eassumption.
-    subst. rewrite map_length. econstructor. eapply has_type_closed1. eauto.
-    apply []. apply beq_nat_false. apply E. apply []. apply beq_nat_false. apply E.
+    simpl in *.
+    eapply T_AndAppVar.
+    eauto. eauto. eauto. fold subst.
+    rewrite subst_open5. eauto. eauto. eauto. fold subst.
+    rewrite subst_open5. eauto. eauto. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
 
-   
-    
+    simpl in *.
+    eapply T_AndAppVar.
+    eauto. eauto. eauto. fold subst.
+    rewrite subst_open_commute0b. eauto.
+    fold subst.  rewrite subst_open_commute0b. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+
+    eapply T_AndAppVar.
+    eauto. eauto. eauto. fold subst.
+    rewrite subst_open5. eauto. eauto. eauto. 
+    fold subst. rewrite subst_open5. eauto. eauto. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
+    eapply closed_subst.  eapply closed_upgrade_gh. eauto. rewrite map_length. rewrite app_length. eauto.
+    rewrite map_length. econstructor.  eapply has_type_closed1. eauto.
   - Case "dnil". subst. simpl.
     eexists. eapply D_Nil.
   - Case "typ". subst. simpl.
