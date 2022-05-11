@@ -1205,4 +1205,86 @@ Proof.
     destruct H.
     subst.
     left. eexists. split. reflexivity. eapply index_exists. assumption.
+  - Case "andappvar". subst.    
+
+    assert (H' := H).
+    eapply has_type_closed_b in H.
+    assert (H1' := H1).
+    eapply has_type_closed_b in H1.
+    destruct H, H1.
+    subst.
+    right.
+
+    assert (t1 :=(tapp (tvar true x1) l (tvar true x2))).
+
+
+    destruct (IHhas_type1 (TFun l T1 T2) (tvar true x1)); eauto.
+    eapply has_type_closed.
+    eapply H'.
+    ev.
+    inversion H. subst.
+
+    
+    assert (exists m n1, vtp m G1 x (TFun l T1 T2) n1). eapply hastp_inv. eauto. ev.
+    inversion H6. subst.
+
+    repeat eexists. 
+    
+    rewrite app_nil_l. eapply ST_AppAbs.
+    eauto. eauto.
+
+    simpl.
+
+    (*TODO*)
+    eapply T_AndAppVar.
+
+
+    assert (exists (G' : venv) (t' : tm) n2,
+             step G1 t1 (G'++G1) t' /\ has_type [] (G'++G1) t' (TFun l T1 T2) n2) as HF
+    eapply IHhas_type1. eauto. eauto. eauto. eauto.
+    
+    assert (exists m n1, vtp m G1 x (TFun l T1 T2) n1). eapply hastp_inv. eauto
+
+    
+    repeat eexists.
+    rewrite app_nil_l. eapply ST_AppAbs.
+    (*TODO*)
+
+    destruct (IHhas_type1 (TFun l T1 T2) (tvar true x1)); eauto.
+    eapply has_type_closed.
+    eapply H'.
+    destruct H.
+    destruct H.
+
+
+    
+    destruct (IHhas_type3 T1 (tvar true x2)); eauto.
+    eapply has_type_closed.
+    eauto.
+
+    
+    eapply ST_App2.
+
+    destruct (IHhas_type3 T1 (tvar true x2)); eauto.
+    eapply has_type_closed.
+    eauto. eauto.
+    
+    destruct (IHhas_type1 (TFun l T1 T2) (tvar true x1)); eauto.
+    eapply has_type_closed.
+    eapply H'.
+    econstructor.
+    
+    eapply ST_App1
+    
+    destruct H.
+    destruct H.
+    destruct H eqn:HX. subst.
+    
+    econstructor; inversion H0. inversion H11; eauto. inversion H12; eauto. inversion H1; eauto.
+    
+    subst.
+    right.
+    
+    left. eexists. split. 
+
 Qed.
