@@ -262,14 +262,15 @@ Inductive has_type : tenv -> venv -> tm -> ty -> nat -> Prop :=
       has_type GH G1 (tvar b x) T1 n1 ->
       has_type GH G1 (tvar b x) T2 n2 ->
       has_type GH G1 (tvar b x) (TAnd T1 T2) (S (n1+n2))
-  | T_AndAppVar : forall l T1 T2 T2' T3 T3' GH G1 b1 x1 b2 x2 n1 n2,
-      has_type GH G1 (tvar b1 x1) (TAnd (TFun l T1 T2) (TFun l T1 T3)) n1 ->
-      has_type GH G1 (tvar b2 x2) T1 n2 ->
+  | T_AndAppVar : forall l T1 T2 T2' T3 T3' GH G1 b1 x1 b2 x2 n1 n2 n3,
+      has_type GH G1 (tvar b1 x1) (TFun l T1 T2) n1 ->
+      has_type GH G1 (tvar b1 x1) (TFun l T1 T3) n2 ->
+      has_type GH G1 (tvar b2 x2) T1 n3 ->
       T2' = (open 0 (TVar b2 x2) T2) ->
       T3' = (open 0 (TVar b2 x2) T3) ->
       closed (length GH) (length G1) 0 T2' ->
       closed (length GH) (length G1) 0 T3' ->
-      has_type GH G1 (tapp (tvar b1 x1) l (tvar b2 x2)) (TAnd T2' T3') (S (n1+n2))
+      has_type GH G1 (tapp (tvar b1 x1) l (tvar b2 x2)) (TAnd T2' T3') (S (n1+n2+n3))
 
 (* : -- member initialization *)
 with dms_has_type: tenv -> venv -> dms -> ty -> nat -> Prop :=
@@ -620,7 +621,7 @@ Proof.
   - econstructor. eapply IHn. eauto. omega. eapply IHn. eauto. omega.
   - eapply T_AndI. eapply IHn. eauto. omega. eapply IHn. eauto. omega.
   - eapply T_AndAppVar. eapply IHn. eauto. omega. eauto. eauto.
-    eapply IHn. eauto. omega. eauto. eauto.
+    eapply IHn. eauto. omega. eapply IHn. eauto. omega. eauto. eauto.
     eapply closed_extend. eauto. eapply closed_extend. eauto.
   (* dms_has_type *)
   - econstructor.
