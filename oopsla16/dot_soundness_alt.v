@@ -1224,67 +1224,43 @@ Proof.
     ev.
     inversion H. subst.
 
-    
     assert (exists m n1, vtp m G1 x (TFun l T1 T2) n1). eapply hastp_inv. eauto. ev.
     inversion H6. subst.
 
-    repeat eexists. 
+    assert (exists T, (exists n1, has_type [] G1 (tvar true x) T n1) /\ substt x T' = T) as A. {
+      eexists. split. eexists. eapply T_Vary. eauto. eauto. eauto. eauto.
+      eapply closed_subst. eapply dms_has_type_closed in H15. eauto. econstructor.
+      eapply index_max in H10. omega. reflexivity.
+    }
+    destruct A as [Tx [[na A] EqTx]].
+    assert (has_typed (map (substt x) [T1x]) G1 (subst_tm x tx) (substt x (open 0 (TVar false 1) T2x))) as HIx.
+    eapply hastp_subst_z. eapply H22. rewrite EqTx. eapply A.
     
-    rewrite app_nil_l. eapply ST_AppAbs.
-    eauto. eauto.
-
-    simpl.
-
-    (*TODO*)
-    eapply T_AndAppVar.
-
-
-    assert (exists (G' : venv) (t' : tm) n2,
-             step G1 t1 (G'++G1) t' /\ has_type [] (G'++G1) t' (TFun l T1 T2) n2) as HF
-    eapply IHhas_type1. eauto. eauto. eauto. eauto.
     
-    assert (exists m n1, vtp m G1 x (TFun l T1 T2) n1). eapply hastp_inv. eauto
+    assert (exists m n1, vtp m G1 x (TFun l T1 T3) n1). eapply hastp_inv. eauto. ev.
+    inversion H7. subst.
 
+    assert (exists T, (exists n1, has_type [] G1 (tvar true x) T n1) /\ substt x T'0 = T) as A2. {
+      eexists. split. eexists. eapply T_Vary. eauto. eauto. eauto. eauto.
+      eapply closed_subst. eapply dms_has_type_closed in H26. eauto. econstructor.
+      eapply index_max in H19. omega. reflexivity.
+    }
+    destruct A2 as [Tx2 [[na2 A2] EqTx2]].
+    assert (has_typed (map (substt x) [T1x0]) G1 (subst_tm x tx0) (substt x (open 0 (TVar false 1) T2x0))) as HIx2.
+    eapply hastp_subst_z. eapply H36. rewrite EqTx2. eapply A2.
     
+        
     repeat eexists.
     rewrite app_nil_l. eapply ST_AppAbs.
-    (*TODO*)
-
-    destruct (IHhas_type1 (TFun l T1 T2) (tvar true x1)); eauto.
-    eapply has_type_closed.
-    eapply H'.
-    destruct H.
-    destruct H.
 
 
-    
-    destruct (IHhas_type3 T1 (tvar true x2)); eauto.
-    eapply has_type_closed.
-    eauto.
+    rewrite H10 in H19. inversion H19.
+    rewrite H9 in *. rewrite H11 in H20. inversion H20. subst.
 
-    
-    eapply ST_App2.
-
-    destruct (IHhas_type3 T1 (tvar true x2)); eauto.
-    eapply has_type_closed.
+    rewrite <- H27 in H16. inversion H16.
+    rewrite H33 in *.
     eauto. eauto.
-    
-    destruct (IHhas_type1 (TFun l T1 T2) (tvar true x1)); eauto.
-    eapply has_type_closed.
-    eapply H'.
-    econstructor.
-    
-    eapply ST_App1
-    
-    destruct H.
-    destruct H.
-    destruct H eqn:HX. subst.
-    
-    econstructor; inversion H0. inversion H11; eauto. inversion H12; eauto. inversion H1; eauto.
-    
-    subst.
-    right.
-    
-    left. eexists. split. 
+    (*TODO*)
+    eapply T_AndI.
 
 Qed.
