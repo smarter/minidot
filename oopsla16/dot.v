@@ -258,10 +258,10 @@ Inductive has_type : tenv -> venv -> tm -> ty -> nat -> Prop :=
       has_type GH G1 t T1 n1 ->
       stp GH G1 T1 T2 n2 ->
       has_type GH G1 t T2 (S (n1 + n2))
-  | T_AndI : forall GH G1 b x T1 T2 n1 n2,
-      has_type GH G1 (tvar b x) T1 n1 ->
-      has_type GH G1 (tvar b x) T2 n2 ->
-      has_type GH G1 (tvar b x) (TAnd T1 T2) (S (n1+n2))
+  | T_AndI : forall GH G1 t T1 T2 n1 n2,
+      has_type GH G1 t T1 n1 ->
+      has_type GH G1 t T2 n2 ->
+      has_type GH G1 t (TAnd T1 T2) (S (n1+n2))
 
 (* : -- member initialization *)
 with dms_has_type: tenv -> venv -> dms -> ty -> nat -> Prop :=
