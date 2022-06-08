@@ -344,6 +344,13 @@ with stp: tenv -> venv -> ty -> ty -> nat -> Prop :=
     closed (length GH) (length G1) 1 T2 ->
     stp GH G1 (TBind T1) (TBind T2) (S n1)
 
+| stp_and_bind: forall GH G1 T1 T1' T2 T2' n1,
+    T1' = (open 0 (TVar false (length GH)) T1) ->
+    T2' = (open 0 (TVar false (length GH)) T2) ->
+    closed (length GH) (length G1) 1 T1 ->
+    closed (length GH) (length G1) 1 T2 ->
+    stp GH G1 (TAnd (TBind T1) (TBind T2)) (TBind (TAnd T1 T2)) (S n1)
+
 | stp_and11: forall GH G1 T1 T2 T n1,
     stp GH G1 T1 T n1 ->
     closed (length GH) (length G1) 0 T2 ->
@@ -437,7 +444,13 @@ Lemma stpd_typ: forall GH G1 l T1 T2 T3 T4,
     stpd GH G1 (TTyp l T1 T2) (TTyp l T3 T4).
 Proof. intros. repeat eu. eexists. eauto. Qed.
 
-
+Lemma stpd_and_bind: forall GH G1 T1 T1' T2 T2',
+    T1' = (open 0 (TVar false (length GH)) T1) ->
+    T2' = (open 0 (TVar false (length GH)) T2) ->
+    closed (length GH) (length G1) 1 T1 ->
+    closed (length GH) (length G1) 1 T2 ->
+    stpd GH G1 (TAnd (TBind T1) (TBind T2)) (TBind (TAnd T1 T2)).
+Proof. intros. exists 1. eauto. Qed.
 
 Lemma stpd_trans: forall GH G1 T1 T2 T3,
     stpd GH G1 T1 T2 ->
@@ -590,6 +603,7 @@ Proof.
   - econstructor. eapply vr_closed_extend. eauto.
   - econstructor. eapply IHn. eauto. omega. eauto. eapply closed_extend. eauto. eapply closed_extend. eauto.
   - eapply stp_bindx. eapply IHn. eauto. omega. eauto. eauto. eapply closed_extend. eauto. eapply closed_extend. eauto.
+  - eapply stp_and_bind. econstructor. econstructor. eapply closed_extend. eauto. eapply closed_extend. eauto.
   - eapply stp_and11. eapply IHn. eauto. omega. eapply closed_extend. eauto.
   - eapply stp_and12. eapply IHn. eauto. omega. eapply closed_extend. eauto.
   - eapply stp_and2. eapply IHn. eauto. omega. eapply IHn. eauto. omega.
@@ -704,6 +718,7 @@ Proof.
   - econstructor. eauto.
   - econstructor. eauto.
   - econstructor. eauto.
+  - econstructor. eapply cl_bind. eauto. eapply cl_bind. eauto.
   - econstructor. eapply IHS1. eauto. omega. eauto.
   - econstructor. eauto. eapply IHS1. eauto. omega.
   - eapply IHS1. eauto. omega.
@@ -723,6 +738,7 @@ Proof.
   - econstructor. eauto.
   - eauto.
   - econstructor. eauto.
+  - econstructor. eapply cl_and. eauto. eauto.
   - eapply IHS2. eauto. omega.
   - eapply IHS2. eauto. omega.
   - econstructor. eapply IHS2. eauto. omega. eapply IHS2. eauto. omega.
@@ -1619,6 +1635,13 @@ Proof.
     rewrite B. eauto.
     rewrite map_splice_length_inc. eapply closed_splice. eauto.
     rewrite map_splice_length_inc. eapply closed_splice. eauto.
+  - Case "and_bind".
+    eapply stp_and_bind.
+    rewrite map_splice_length_inc. eauto.
+    rewrite map_splice_length_inc. eauto.
+    rewrite map_splice_length_inc. eauto.
+    fold splice. eapply closed_splice. eauto.
+    fold splice. rewrite map_splice_length_inc. eapply closed_splice. eauto.
   - Case "and11".
     simpl. eapply stp_and11.
     eapply IHstp. eauto. omega.
@@ -1838,7 +1861,8 @@ Proof.
     simpl. rewrite <- splice_open_permute0. rewrite B. reflexivity.
     eapply closed_upgrade_gh. eauto. simpl. omega.
     eapply closed_upgrade_gh. eauto. simpl. omega.
-
+  - eapply stp_and_bind. eauto. eauto. eapply closed_upgrade_gh. eauto. simpl. omega. simpl.
+    eapply closed_upgrade_gh. eauto. omega.
   - eapply stp_and11. eapply IHn. eauto. omega. eapply closed_upgrade_gh. eauto. simpl. omega.
   - eapply stp_and12. eapply IHn. eauto. omega. eapply closed_upgrade_gh. eauto. simpl. omega.
   - eapply stp_and2. eapply IHn. eauto. omega. eapply IHn. eauto. omega.
@@ -2014,6 +2038,8 @@ Proof.
       rewrite EGHLEN. subst. simpl. reflexivity.
       rewrite EGHLEN. subst. simpl. reflexivity.
       rewrite EGHLEN. assumption. rewrite EGHLEN. assumption.
+    + SCase "and_bind".
+      eapply stpd_and_bind; rewrite EGHLEN; eauto.
     + SCase "and11".
       edestruct IHn_stp as [? IH].
       eapply H0. omega. eauto. eauto. eauto.
