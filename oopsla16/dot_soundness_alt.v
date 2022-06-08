@@ -260,6 +260,12 @@ Proof.
     rewrite app_length in H5. simpl in H5. eauto. eapply closed_subst0. rewrite map_length. eauto. eauto.
     rewrite app_length in H6. simpl in H6. eauto. eapply closed_subst0. rewrite map_length. eauto. eauto.
 
+  - Case "and_bind". subst.
+    rewrite app_length in H2, H3. simpl in H2, H3.
+    eapply stpd_and_bind; eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+
   - Case "and11".
     assert (stpd (map (substt x) GH) G1 (substt x T0) (substt x T2)). eapply IHn. eauto. eauto. omega. eauto.
     eu. eexists. eapply stp_and11. eauto. eapply closed_subst0. rewrite app_length in H3. rewrite map_length. eauto. eauto.
@@ -536,6 +542,20 @@ Proof.
       euv. repeat eexists. eapply vtp_sel. eauto. eauto. eauto. eauto.
     + SCase "sel2".
       eapply stp_closed2 in H0. simpl in H0. inversion H0. inversion H13. omega.
+    + SCase "and_bind".
+      assert (vtpdd (m1-1) G1 x (open 0 (TVar true x) (TAnd T2 T4))) as Hx. {
+        replace (open 0 (TVar true x) (TAnd T2 T4)) with
+          (TAnd (open 0 (TVar true x) T2) (open 0 (TVar true x) T4)) by eauto.
+        inversion H. inversion H11. inversion H17. subst.
+        exists (m1-1). exists (S (n5+n6)).
+        repeat eexists.
+        eapply vtp_and.
+        eapply H21. eapply H28. omega. omega. eauto.
+      }
+      euv. repeat eexists. eapply vtp_bind. eauto. eauto.
+      destruct m1.
+      * inversion H5. subst. inversion H7.
+      * omega.
     + SCase "and11". eapply IHn in H4. euv. repeat eexists. eauto. omega. eauto. omega. omega. eauto.
     + SCase "and12". eapply IHn in H5. euv. repeat eexists. eauto. omega. eauto. omega. omega. eauto.
     + SCase "and".
