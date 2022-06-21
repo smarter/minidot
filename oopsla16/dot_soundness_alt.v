@@ -266,6 +266,22 @@ Proof.
     + rewrite map_length. eapply closed_subst0. eauto. eauto.
     + rewrite map_length. eapply closed_subst0. eauto. eauto.
 
+  - Case "and_typ". subst.
+    rewrite app_length in H2, H3, H4, H5. simpl in H2, H3, H4, H5.
+    eapply stpd_and_typ; eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+
+  - Case "or_typ". subst.
+    rewrite app_length in H2, H3, H4, H5. simpl in H2, H3, H4, H5.
+    eapply stpd_or_typ; eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+    + rewrite map_length. eapply closed_subst0. eauto. eauto.
+
   - Case "and11".
     assert (stpd (map (substt x) GH) G1 (substt x T0) (substt x T2)). eapply IHn. eauto. eauto. omega. eauto.
     eu. eexists. eapply stp_and11. eauto. eapply closed_subst0. rewrite app_length in H3. rewrite map_length. eauto. eauto.
@@ -556,6 +572,13 @@ Proof.
       destruct m1.
       * inversion H5. subst. inversion H7.
       * omega.
+    + SCase "and_typ".
+      inversion H4. inversion H5. subst.
+      rewrite H26 in H13. inversion H13. subst.
+      rewrite H30 in H19. inversion H19. subst.
+      repeat eexists. eapply vtp_typ. eauto. eauto.
+      eapply stp_or1. eauto. eauto.
+      eapply stp_and2. eauto. eauto. eauto.
     + SCase "and11". eapply IHn in H4. euv. repeat eexists. eauto. omega. eauto. omega. omega. eauto.
     + SCase "and12". eapply IHn in H5. euv. repeat eexists. eauto. omega. eauto. omega. omega. eauto.
     + SCase "and".
@@ -580,6 +603,10 @@ Proof.
       euv. repeat eexists. eapply vtp_sel. eauto. eauto. eauto. eauto.
     + SCase "sel2".
       eapply stp_closed2 in H0. simpl in H0. inversion H0. inversion H13. omega.
+    + SCase "or_typ".
+      inversion H4. subst.
+      repeat eexists. eapply vtp_typ. eauto. eauto. eapply stp_and11. eauto. eauto.
+      eapply stp_or21. eauto. eauto. eauto.
     + SCase "and".
       assert (vtpdd m1 G1 x T2). eapply IHn; eauto. omega. euv.
       assert (vtpdd m1 G1 x T4). eapply IHn; eauto. omega. euv.
@@ -605,6 +632,10 @@ Proof.
       euv. repeat eexists. eapply vtp_sel. eauto. eauto. eauto. eauto.
     + SCase "sel2".
       eapply stp_closed2 in H0. simpl in H0. inversion H0. inversion H13. omega.
+    + SCase "or_typ".
+      inversion H4. subst.
+      repeat eexists. eapply vtp_typ. eauto. eauto. eapply stp_and12. eauto. eauto.
+      eapply stp_or22. eauto. eauto. eauto.
     + SCase "and".
       assert (vtpdd m1 G1 x T2). eapply IHn; eauto. omega. euv.
       assert (vtpdd m1 G1 x T4). eapply IHn; eauto. omega. euv.
