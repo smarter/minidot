@@ -413,7 +413,12 @@ with htp: tenv -> venv -> id -> ty -> nat -> Prop :=
     stp GL G1 T1 T2 n2 ->
     length GL = S x ->
     GH = GU ++ GL ->
-    htp GH G1 x T2 (S (n1+n2)).
+    htp GH G1 x T2 (S (n1+n2))
+| htp_andi: forall GH G1 x T1 T2 n1 n2,
+    htp GH G1 x T1 n1 ->
+    htp GH G1 x T2 n2 ->
+    htp GH G1 x (TAnd T1 T2) (S (n1+n2)).
+
 
 Definition has_typed GH G1 x T1 := exists n, has_type GH G1 x T1 n.
 
@@ -643,6 +648,7 @@ Proof.
   - econstructor. eauto. eapply closed_extend. eauto.
   - eapply htp_unpack. eapply IHn. eauto. omega. eapply closed_extend. eauto.
   - eapply htp_sub. eapply IHn. eauto. omega. eapply IHn. eauto. omega. eauto. eauto.
+  - eapply htp_andi. eapply IHn. eauto. omega. eapply IHn. eauto. omega.
   (* has_type *)
   - econstructor. eapply index_extend. eauto. eapply IHn. eauto. omega. eauto. eauto. eapply closed_extend. eauto.
   - econstructor. eauto. eapply closed_extend. eauto.
@@ -782,10 +788,13 @@ Proof.
   - eapply index_max. eauto.
   - eapply IHH1. eauto. omega.
   - eapply IHH1. eauto. omega.
+  - eapply IHH1. eauto. omega.
   (* htp right *)
   - eapply closed_upgrade_gh. eauto. subst. eapply index_max in H1. omega.
   - eapply IHH1 in H1. eapply closed_open. simpl. eapply closed_upgrade_gh. eauto. omega. econstructor. eauto. omega.
   - eapply closed_upgrade_gh. eapply IHS2. eauto. omega. rewrite H4. rewrite app_length. omega.
+  - eapply IHH2 in H1. eapply IHH2 in H2.
+    eapply cl_and. eauto. eauto. omega. omega.
   (* has_type *)
   - subst. eapply closed_upgrade_gh. eauto. omega.
   - eauto.
@@ -1798,6 +1807,32 @@ Proof.
       rewrite C. eauto.
       instantiate (1:=(map (splice (length G0)) G1 ++ v1 :: GH0U)).
       rewrite <- app_assoc. simpl. rewrite EQGH. reflexivity.
+  - Case "htp_andi".
+    unfold splice_var.
+    case_eq (le_lt_dec (length G0) x1); intros E LE.
+    + assert (S x1 = x1 + 1) as A by omega.
+      assert (splice_var (length G0) x1=x1+1) as B. {
+        unfold splice_var. rewrite LE. reflexivity.
+      }
+      rewrite <- B.
+      eapply htp_andi; fold splice.
+      eapply IHhtp. eauto. omega.
+      eapply IHhtp. eauto. omega.
+    + eapply IHhtp in H1. eapply IHhtp in H2.
+      assert (htp (map (splice (length G0)) G1 ++ v1 :: G0) GX x1
+                (TAnd (splice (length G0) T0) (splice (length G0) T2)) (S (n1 + n2))) as A. {
+        eapply htp_andi.
+        unfold splice_var in H1. simpl in H1.
+        rewrite LE in H1.
+        eauto.
+        unfold splice_var in H2. simpl in H2.
+        rewrite LE in H2.
+        eauto.
+      }
+      assert (splice (length G0) (TAnd T0 T2) = (TAnd (splice (length G0) T0) (splice (length G0) T2))) as B. {
+        econstructor.
+      }
+      rewrite B. eapply A. omega. omega.
 Qed.
 
 Lemma stp_splice: forall GX G0 G1 T1 T2 v1 n,
@@ -1926,6 +1961,7 @@ Proof.
   - eapply htp_unpack. eapply IHn. eauto. omega. eapply closed_upgrade_gh. eauto. omega.
   - eapply htp_sub. eapply IHn. eauto. omega. eauto. eauto. subst GH.
     instantiate (1:=T::GU). eauto.
+  - eapply htp_andi. eapply IHn. eauto. omega. eapply IHn. eauto. omega.
 Qed.
 
 Lemma stp_upgrade_gh : forall GH T G1 T1 T2 n,
@@ -2044,6 +2080,12 @@ Proof.
       eexists. eapply htp_sub. eapply Htp. eassumption. eauto.
       instantiate (1:=GH1 ++ [TX1] ++ GH0U). subst.
       rewrite <- app_assoc. rewrite <- app_assoc. reflexivity.
+    + SCase "andi".
+      edestruct IHn_htp with (GH:=GH) (GH':=GH').
+      eapply H0. omega. eapply EGH. eapply EGH'. assumption.
+      edestruct IHn_htp with (GH:=GH) (GH':=GH').
+      eapply H1. omega. eapply EGH. eapply EGH'. assumption.
+      eexists. eapply htp_andi. eauto. eauto.
     }
 
     intros GH G T1 T2 n0 H NE. inversion H; subst;

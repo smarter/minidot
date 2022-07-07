@@ -175,6 +175,13 @@ Proof.
         (* - *)
         rewrite map_length. rewrite app_length in H8. simpl in H8. unfold id in *. omega.
         subst GH0. rewrite map_app. eauto.
+      + (* andi *) subst.
+        assert (htpd (map (substt x) GH0) G1 (xi - 1) (TAnd (substt x T3) (substt x T4))). {
+          eapply IHni in H6. eu. eapply IHni in H7. eu.
+          exists (S(x0+x1)).
+          eapply htp_andi. eapply H6. eapply H7. eauto. omega. omega. eauto. omega. omega.
+        }
+        eauto.
   }
   (* special case *)
   assert (forall ni n2, forall T0 T2,
@@ -369,6 +376,19 @@ Proof.
     assert (vtpdd x0 G1 x (substt x T2)).
     eapply H4. eauto. eauto. eauto.
     euv. repeat eexists. eauto. omega.
+  - Case "andi". subst.
+    assert (vtpdd m G1 x (substt x T0)) as A. {
+      eapply IHnl. eauto. eauto. eauto. eauto. omega. eauto.
+    }
+    euv.
+    assert (vtpdd m G1 x (substt x T1)) as B. {
+      eapply IHnl. eauto. eauto. eauto. eauto. omega. eauto.
+    }
+    euv.
+    exists m. exists (S(x3+x1)).
+    split.
+    + eapply vtp_and; fold subst. eapply B. eapply A. omega. omega.
+    + eauto.
 Qed.
 
 (* possible types closure *)
